@@ -7,7 +7,6 @@ const ecc = require("@bitcoinerlab/secp256k1");
 
 const SendBitcoinTransaction = () => {
   const [txn, setTxn] = useState("");
-  const [status, setStatus] = useState("");
 
   async function sendBTC() {
     const walletA = {
@@ -85,22 +84,18 @@ const SendBitcoinTransaction = () => {
       txb.finalizeAllInputs();
 
       const rawHex = txb.extractTransaction().toHex();
-      console.log("Raw Hex");
       console.log(rawHex);
-      setTxn(rawHex);
 
-      if (rawHex) {
-        console.log(
-          "Transaction status:",
-          rawHex === "1" ? "UnConfirmed" : "confirmed"
-        );
+      const response = await axios.post(
+        `https://api.blockcypher.com/v1/btc/test3/txs/push`,
+        {
+          tx: rawHex,
+        }
+      );
 
-        const status = rawHex === "1" ? "UnConfirmed" : "Confirmed";
-
-        setStatus(status);
-      } else {
-        console.log("Transaction not found.");
-      }
+      const hash = response.data.tx.hash;
+      console.log("Transaction response: ", hash);
+      setTxn(hash);
     } catch (error) {
       console.error(error);
     }
@@ -114,11 +109,7 @@ const SendBitcoinTransaction = () => {
   return (
     <View>
       <Text>
-        Transaction Details {"\n"} : {txn} {"\n"}
-      </Text>
-
-      <Text>
-        Transaction Status {"\n"} : {status}{" "}
+        Transaction Details {"\n"} :{txn} {"\n"}
       </Text>
     </View>
   );

@@ -1,40 +1,26 @@
-import React, { useEffect, useState } from "react";
-import { View, Text } from "react-native";
-import Web3 from "web3";
-import { Buffer } from "buffer";
+import React from "react";
+import { View, Text, TextInput, Button } from "react-native";
+import { observer } from "mobx-react-lite";
+import walletStore from "./WalletStore";
 
-const ImportPolygonWallet = () => {
-  const providerUrl = "https://rpc-mumbai.maticvigil.com/";
-  const privateKey = `9e5c9d6e044075fe3c426092c011102acafbc01afd28cf7fe94cdf213ef23ef7`;
-
-  const privateKeyBytes = Buffer.from(privateKey, "hex");
-
-  const provider = new Web3.providers.HttpProvider(providerUrl);
-  const web3 = new Web3(provider);
-
-  const [address, setAddress] = useState(null);
-
-  useEffect(() => {
-    const fetchAccountAddress = async () => {
-      try {
-        const account = web3.eth.accounts.privateKeyToAccount(privateKeyBytes);
-        setAddress(account.address);
-        // setPolygonAddress('your polygon address');
-      } catch (error) {
-        console.error("Error fetching account address:", error);
-      }
-    };
-
-    fetchAccountAddress();
-  }, []);
+const ImportPolygonWallet = observer(() => {
+  const { privateKey, setPrivateKey, address, fetchAccountAddress } =
+    walletStore;
 
   return (
     <View>
-      <Text>Polygon Address {"\n"}</Text>
+      <TextInput
+        placeholder="Recipient Private Key"
+        value={privateKey}
+        onChangeText={setPrivateKey}
+      />
 
-      <Text>Wallet address : {address}</Text>
+      <Button onPress={fetchAccountAddress} title="Import Private Key" />
+      <Text>
+        {"\n"}Wallet address : {address}
+      </Text>
     </View>
   );
-};
+});
 
 export default ImportPolygonWallet;

@@ -1,33 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { View, Text } from "react-native";
-import { networks } from "bitcoinjs-lib";
-var bitcoin = require("bitcoinjs-lib");
-import { Buffer } from "buffer";
-import { ECPairFactory } from "ecpair";
-const ecc = require("@bitcoinerlab/secp256k1");
+import walletStore from "./WalletStore";
+import { observer } from "mobx-react-lite";
 
-const ImportBitcoinWallet = () => {
-  const [add, setAdd] = useState();
-
-  const handleSetAddress = async () => {
-    const ECPair = ECPairFactory(ecc);
-    const keyPair = ECPair.makeRandom({ network: networks.testnet });
-
-    const { privateKey, publicKey } = keyPair;
-
-    const pubkey = publicKey.toString("hex");
-
-    const prikey = privateKey.toString("hex");
-
-    console.log(pubkey, prikey);
-
-    const { address } = bitcoin.payments.p2pkh({
-      pubkey: publicKey,
-      network: networks.testnet,
-    });
-    console.log(address);
-    setAdd(address);
-  };
+const ImportBitcoinWallet = observer(() => {
+  const { bitcoinAddress, handleSetAddress } = walletStore;
 
   useEffect(() => {
     // Usage
@@ -36,9 +13,9 @@ const ImportBitcoinWallet = () => {
 
   return (
     <View>
-      <Text>Bitcoin Address : {add} </Text>
+      <Text>Bitcoin Address : {bitcoinAddress} </Text>
     </View>
   );
-};
+});
 
 export default ImportBitcoinWallet;

@@ -106,7 +106,6 @@ class BitcoinStore {
       const hash = response.data.tx.hash;
       console.log("Transaction response: ", hash);
       this.setTxn(hash);
-      console.log(this.setTxn(hash));
     } catch (error) {
       console.error(error);
     }

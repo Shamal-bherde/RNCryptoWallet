@@ -1,5 +1,6 @@
 import { makeAutoObservable, action } from "mobx";
 const { ethers } = require("ethers");
+import "@ethersproject/shims";
 import { Linking } from "react-native";
 import { networks } from "bitcoinjs-lib";
 var bitcoin = require("bitcoinjs-lib");
